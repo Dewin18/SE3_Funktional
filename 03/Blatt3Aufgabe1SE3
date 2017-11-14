@@ -1,0 +1,58 @@
+#lang racket
+
+(define buchstabiertafel (list (cons #\A 'Alpha);;The list from the exercise
+                               (cons #\B 'Bravo)
+                               (cons #\C 'Charlie)
+                               (cons #\D 'Delta)
+                               (cons #\E 'Echo)
+                               (cons #\F 'Foxtrot)
+                               (cons #\G 'Golf)
+                               (cons #\H 'Hotel)
+                               (cons #\I 'India)
+                               (cons #\J 'Juliet)
+                               (cons #\K 'Kilo)
+                               (cons #\L 'Lima)
+                               (cons #\M 'Mike)
+                               (cons #\N 'November)
+                               (cons #\O 'Oscar)
+                               (cons #\P 'Papa)
+                               (cons #\Q 'Quebec)
+                               (cons #\R 'Romeo)
+                               (cons #\S 'Sierra)
+                               (cons #\T 'Tango)
+                               (cons #\U 'Uniform)
+                               (cons #\V 'Viktor)
+                               (cons #\W 'Whiskey)
+                               (cons #\X 'X-ray)
+                               (cons #\Y 'Yankee)
+                               (cons #\Z 'Zulu)
+                               (cons #\0 'Nadazero)
+                               (cons #\1 'Unaone)
+                               (cons #\2 'Duotwo)
+                               (cons #\3 'Terrathree)
+                               (cons #\4 'Carrefour)
+                               (cons #\5 'Pentafive)
+                               (cons #\6 'Soxisix)
+                               (cons #\7 'Setteseven)
+                               (cons #\8 'Oktoeight)
+                               (cons #\9 'Novonine)
+                               (cons #\, 'Decimal)
+                               (cons #\. 'Stop)))
+
+(define (Key input);;this function is used by String->Buchstabier in order to find the pair in wich the input can be found
+  (assoc  input buchstabiertafel))
+
+(define (String->Buchstabier String);; in thi sfunction we get a String and then we find the pair from our list that is fitting for each charcter in the String
+  (if (< 1 (Slength String)); if the lenght of the string is greater then 1 we have to use recursion
+      (let ([a (car(string->list String))])
+        (list (Key a) (String->Buchstabier (StringTail String))))    ;here we use Key to get the pair fitting the first character of our string  
+  (Key  (car (string->list String))))) ; once the length of the String is 1 we find the fitting pair for the character of our String and the function terminates
+        
+ 
+
+(define (StringTail String);;we use this function to get our String without the first Character
+  (list->string (cdr (string->list String))))
+(define (Slength String);;we use this function to find out the lenght of our string
+  (length (string->list String)))
+(String->Buchstabier "ABCDEAA,.")
+  
