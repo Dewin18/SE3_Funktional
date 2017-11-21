@@ -42,58 +42,61 @@
   (string-append
    (ueberschrift shipname callsign) "\n"
    (positionInformation position) "\n"
-   (emergencyInformation caseOfEmergency) "\n"
-   (additionalNotes notes) "\n"
-   (pileSigns) "\n"
+   caseOfEmergency "\n"
+   notes "\n"
+   "ICH SENDE DEN TRÄGER --" "\n"
+   (getKeyString callsign) "\n"
    "OVER"))
 
 (define (ueberschrift shipname callsign)
   (string-append
    "MAYDAY MAYDAY MAYDAY \n"
-   "HIER IST"
-   shipname shipname shipname callsign
-   "MAYDAY" shipname shipname
-   callsign))
+   "HIER IST " shipname " " shipname " " shipname " " (getKeyString callsign) "\n"
+   "MAYDAY " shipname " ICH BUCHSTABIERE " (getKeyString shipname) "\n"
+   "RUFZEICHEN " (getKeyString callsign)))
 
+(define (positionInformation position)
+  (string-append
+   "NOTFALLPOSITION UNGEFÄHR " position))
 
-(define buchstabiertafel (list (cons "A" "Alpha")
-                               (cons "B" "Bravo")
-                               (cons "C" "Charlie")
-                               (cons "D" "Delta")
-                               (cons "E" "Echo")
-                               (cons "F" "Foxtrot")
-                               (cons "G" "Golf")
-                               (cons "H" "Hotel")
-                               (cons "I" "India")
-                               (cons "J" "Juliet")
-                               (cons "K" "Kilo")
-                               (cons "L" "Lima")
-                               (cons "M" "Mike")
-                               (cons "N" "November")
-                               (cons "O" "Oscar")
-                               (cons "P" "Papa")
-                               (cons "Q" "Quebec")
-                               (cons "R" "Romeo")
-                               (cons "S" "Sierra")
-                               (cons "T" "Tango")
-                               (cons "U" "Uniform")
-                               (cons "V" "Viktor")
-                               (cons "W" "Whiskey")
-                               (cons "X" "X-ray")
-                               (cons "Y" "Yankee")
-                               (cons "Z" "Zulu")
-                               (cons "0" "Nadazero")
-                               (cons "1" "Unaone")
-                               (cons "2" "Duotwo")
-                               (cons "3" "Terrathree")
-                               (cons "4" "Carrefour")
-                               (cons "5" "Pentafive")
-                               (cons "6" "Soxisix")
-                               (cons "7" "Setteseven")
-                               (cons "8" "Oktoeight")
-                               (cons "9" "Novonine")
-                               (cons "," "Decimal")
-                               (cons "." "Stop")))
+(define buchstabiertafel (list (cons "A" "ALPHA")
+                               (cons "B" "BRAVO")
+                               (cons "C" "CHARLIE")
+                               (cons "D" "DELTA")
+                               (cons "E" "ECHO")
+                               (cons "F" "FOXTROT")
+                               (cons "G" "GOLF")
+                               (cons "H" "HOTEL")
+                               (cons "I" "INDIA")
+                               (cons "J" "JULIET")
+                               (cons "K" "KILO")
+                               (cons "L" "LIMA")
+                               (cons "M" "MIKE")
+                               (cons "N" "NOVEMBER")
+                               (cons "O" "OSCAR")
+                               (cons "P" "PAPA")
+                               (cons "Q" "QUEBEC")
+                               (cons "R" "ROMEO")
+                               (cons "S" "SIERRA")
+                               (cons "T" "TANGO")
+                               (cons "U" "UNIFORM")
+                               (cons "V" "VIKTOR")
+                               (cons "W" "WHISKEY")
+                               (cons "X" "X-RAY")
+                               (cons "Y" "YANKEE")
+                               (cons "Z" "ZULU")
+                               (cons "0" "NADAZERO")
+                               (cons "1" "UNAONE")
+                               (cons "2" "DUOTWO")
+                               (cons "3" "TERRATHREE")
+                               (cons "4" "CARREFOUR")
+                               (cons "5" "PENTAFIVE")
+                               (cons "6" "SOXISIX")
+                               (cons "7" "SETTESEVEN")
+                               (cons "8" "OKTOEIGHT")
+                               (cons "9" "NOVONINE")
+                               (cons "," "DECIMAL")
+                               (cons "." "STOP")))
 (define (getKey input)
   (cdr (assoc input buchstabiertafel)))
 
@@ -103,3 +106,5 @@
             [input (substring input 1)])
         (string-append (string-append (getKey currentChar) " ") (getKeyString input)))
         " "))
+
+(display (funkspruch "UNICORN" "UCRN" "5 SM NORDWESTLICH LEUCHTTURM ROTER SAND" "SCHWERE SCHLAGSEITE WIR SINKEN" "KEINE VERLETZTEN"))
