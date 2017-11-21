@@ -51,7 +51,8 @@
 (define (ueberschrift shipname callsign)
   (string-append
    "MAYDAY MAYDAY MAYDAY \n"
-   "HIER IST " shipname " " shipname " " shipname " " (getKeyString callsign) "\n"
+   "HIER IST " "\n"
+    shipname " " shipname " " shipname " " (getKeyString callsign) "\n"
    "MAYDAY " shipname " ICH BUCHSTABIERE " (getKeyString shipname) "\n"
    "RUFZEICHEN " (getKeyString callsign)))
 
@@ -107,4 +108,6 @@
         (string-append (string-append (getKey currentChar) " ") (getKeyString input)))
         " "))
 
-(display (funkspruch "UNICORN" "UCRN" "5 SM NORDWESTLICH LEUCHTTURM ROTER SAND" "SCHWERE SCHLAGSEITE WIR SINKEN" "KEINE VERLETZTEN"))
+;(display (funkspruch "UNICORN" "UCRN" "5 SM NORDWESTLICH LEUCHTTURM ROTER SAND" "SCHWERE SCHLAGSEITE WIR SINKEN" "KEINE VERLETZTEN"))
+;(display (funkspruch "NAUTILUS" "DEYJ" "10 SM OESTLICH POINT NEMO 48° 52’ 31,75” S, 123° 23’ 33,07“ W" "EINE RIESENKRAKE HAT DAS SCHIFF UMSCHLUNGEN, EIN GROßES LECK IM RUMPF" "20 PERSONEN AN BOARD, TREIBEN ANTRIEBSLOS AN DER WASSEROBERFLAECHE"))
+;(display (funkspruch "MALTESEFALCON" "HUQ9" "N 54° 34’ 5,87”, E 8° 27’ 33,41" "AUF SANDBANK AUFGELAUFEN" "10 MANN AN BORD, DAS SCHIFF IST 88M LANG, SCHWARZER RUMPF, UNFALLZEIT 0730 UTC."))
