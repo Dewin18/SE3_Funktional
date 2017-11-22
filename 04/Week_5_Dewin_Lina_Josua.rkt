@@ -45,27 +45,31 @@
 ;; this function can be used to generate the Message according to our grammar with the right input (below are a few test cases)
 (define (funkspruch shipname callsign position caseOfEmergency notes)
   (string-append
-   (ueberschrift shipname callsign) "\n"           ;with the backslash n we make sure that the text is formated
+   (title shipname callsign) "\n"           ;with the backslash n we make sure that the text is formated
    (positionInformation position) "\n"             ;we use functions for most of the parts for clarity if the text of one part is alredy obvious we dont use a function
    caseOfEmergency "\n"
    notes "\n"
-   "ICH SENDE DEN TRÄGER --" "\n"
+   traegerzeichen "\n"
    (getKeyString callsign) "\n"                     
    "OVER \n"))
 
-;the function the genereate the title with 2 inputs shipname and callsign. we decided to use HIER IST instead of DE or DELTA ECHO
-(define (ueberschrift shipname callsign) 
+;the function genereates the title with 2 inputs shipname and callsign. We decided to use HIER IST instead of DE or DELTA ECHO
+(define (title shipname callsign) 
   (string-append
-   "MAYDAY MAYDAY MAYDAY \n"
+   emergencyCall emergencyCall emergencyCall "\n"
    "HIER IST " "\n"
    shipname " " shipname " " shipname " " (getKeyString callsign) "\n"    ;getKeyString is a function from the last exercise wich we reuse here
-   "MAYDAY " shipname " ICH BUCHSTABIERE " (getKeyString shipname) "\n"
+   emergencyCall shipname " ICH BUCHSTABIERE " (getKeyString shipname) "\n"
    "RUFZEICHEN " (getKeyString callsign)))
+
+(define emergencyCall "MAYDAY ")
 
 ;the function generates the text wich gives information about our position
 (define (positionInformation position)
-  (string-append
-   "NOTFALLPOSITION UNGEFÄHR " position))
+  (string-append "NOTFALLPOSITION UNGEFÄHR " position))
+
+(define traegerzeichen "ICH SENDE DEN TRÄGER --")
+
 ;the list of pairs we used last exercie wich we need again for some parts of the message
 (define buchstabiertafel (list (cons "A" "ALPHA")
                                (cons "B" "BRAVO")
@@ -140,6 +144,7 @@
 (define (new-if condition? then-clause else-clause)
  (cond (condition? then-clause)
        (else else-clause)))
+
 (define (faculty product counter max-count)
 
   (new-if (> counter max-count)
@@ -147,7 +152,9 @@
          (faculty (* counter product)
                   (+ counter 1)
                   max-count)))
+
 ;(faculty 1 1 5)
+
 ;wenn man versucht dieses programm zu benutzen übergeben wir zuerst > 1 5 an unsere new if funktion mit
 ;then-clause als 1 und else-clause als rekursiver ausdruck von faculty mit product als * counter product
 ;und counter als + 1 counterund dem vorherigen max-count. in der new-if funktion prüfen wir dann unsere
