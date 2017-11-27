@@ -146,7 +146,6 @@
        (else else-clause)))
 
 (define (faculty product counter max-count)
-
   (new-if (> counter max-count)
          product
          (faculty (* counter product)
@@ -158,12 +157,26 @@
 ;wenn man versucht dieses programm zu benutzen übergeben wir zuerst > 1 5 an unsere new if funktion mit
 ;then-clause als 1 und else-clause als rekursiver ausdruck von faculty mit product als * counter product
 ;und counter als + 1 counterund dem vorherigen max-count. in der new-if funktion prüfen wir dann unsere
-; condition also > 1 5 also führen wir die else clause aus. allerdings werten wir direckt schon alle
+;condition also > 1 5 also führen wir die else clause aus. allerdings werten wir direckt schon alle
 ;inputs aus also prüfen wir nicht erst ob die neue condition stimmt sondern machen direckt weiter und
 ;versuchen die then und die else clause auzuwerten was leider unendlich lange dauert um dies zu verhindern
 ;brachen wir hier spezialformen ein anderes beispiel wäre ' womit wir ja eine auswertung verhindern wollen
 ;würde dies erst nach der auswertung bemerkt werden gäbe es ein problem
 
 ;;4
-;TODO
- 
+
+(require syntax/parse/define)
+
+;we can create a new special form by using (define-simple-macro instead of (define
+(define-simple-macro  (new-ifX condition? then-clause else-clause)
+ (cond (condition? then-clause)
+       (else else-clause)))
+
+(define (facultyX product counter max-count)
+  (new-ifX (> counter max-count)
+         product
+         (facultyX (* counter product)
+                  (+ counter 1)
+                  max-count)))
+
+(facultyX 1 1 5)
