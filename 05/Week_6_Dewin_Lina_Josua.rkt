@@ -83,26 +83,20 @@
         [(string-contains? "ellipserhombhexagon" (symbol->string attr)) (car (cdddr attributes))]
         [else "UNDEFINED ATTRIBUTE"]))
 
-;(getAttrList 'blue)
-
 ;;1.2.1
 ;returns any other recessive attributes of a given attribute
 (define (getRecessiveAttributes attr)
   (cond [(= 0 (index-of (getAttrList attr) attr)) (cdr (getAttrList attr))]
         [(= 1 (index-of (getAttrList attr) attr)) (cddr (getAttrList attr))]
         [(= 2 (index-of (getAttrList attr) attr)) (cdddr (getAttrList attr))]))
-  
-;(getRecessiveAttributes 'blue)
 
 ;;1.2.2
 ;compares two attributes in terms of dominance
-(define (compareAttributes attr1 attr2)
+(define (getMoreDominantAttribute attr1 attr2)
   (if (< (index-of (getAttrList attr1)  attr1)
          (index-of (getAttrList attr2)  attr2))
       attr1
       attr2))
-
-(compareAttributes 'yellow 'green)
 
 ;1.2.3
 ;creates a butterfly with dominant attributes and random recessive attributes
@@ -116,31 +110,42 @@
 (define (getRandomAttribute attr)
 (list-ref (getAttrList attr) (random (length (getAttrList attr)))))
 
-(makeButterfly 'green 'dots 'curved 'rhomb)
-
 ;1.2.4
-;returns all visible attributes of a butterfly
-;(define (getVisAttributes butterfly)
-;TODO einfach jedes zweite element von (makeButterfly ...) ausgeben. Start bei 0
+;returns all visible attributes of a butterfly. All visible elements have an even index in the list
+(define (getVisibleAttributes butterfly)
+  (let ([color   (car (list-tail butterfly 0))]
+        [palp    (car (list-tail butterfly 2))]
+        [pattern (car (list-tail butterfly 4))]
+        [wings   (car (list-tail butterfly 6))])
+        (list color palp pattern wings)))
 
-;returns all invisible attributes of a butterfly
-;(define (getInvisAttributes butterfly)
-;TODO einfach jedes zweite element von (makeButterfly ...) ausgeben. Start bei 1
+;returns all invisible attributes of a butterfly All invisible elements have an odd index in the list
+(define (getInvisibleAttributes butterfly)
+   (let ([color   (car (list-tail butterfly 1))]
+         [palp    (car (list-tail butterfly 3))]
+         [pattern (car (list-tail butterfly 5))]
+         [wings   (car (list-tail butterfly 7))])
+         (list color palp pattern wings)))
 
 ;1.2.5
+;define some different butterflies for testing
 (define butterfly1 (makeButterfly 'red 'dots 'curved 'rhomb))
 (define butterfly2 (makeButterfly 'blue 'star 'curly 'hexagon))
 (define butterfly3 (makeButterfly 'yellow 'dots 'straight 'ellipse))
 
-(define (display-butterfly butterfly)
-  (let ([color   (car butterfly)]
-        [palp    (car (list-tail butterfly 2))]
-        [pattern (car (list-tail butterfly 4))]
-        [wings   (car (list-tail butterfly 6))])
-        (show-butterfly color palp pattern wings)))
-
 ;displays the butterfly on the screen
-(display-butterfly butterfly3)
+(define (display-butterfly butterfly)
+  (let ([visAttr (getVisibleAttributes butterfly)])
+        (show-butterfly (car visAttr) (cadr visAttr) (caddr visAttr) (cadddr visAttr))))
+
+
+;;sample outputs
+(getAttrList 'blue)
+(getRecessiveAttributes 'blue)
+(getMoreDominantAttribute 'yellow 'green)
+(getVisibleAttributes butterfly2)
+(getInvisibleAttributes butterfly2)
+(display-butterfly butterfly2)
 
 ;1.2.6
 ;TODO
