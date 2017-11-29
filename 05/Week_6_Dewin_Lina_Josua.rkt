@@ -127,7 +127,7 @@
 ;(define (getInvisAttributes butterfly)
 ;TODO einfach jedes zweite element von (makeButterfly ...) ausgeben. Start bei 1
 
-;1.2.3
+;1.2.5
 (define butterfly1 (makeButterfly 'red 'dots 'curved 'rhomb))
 (define butterfly2 (makeButterfly 'blue 'star 'curly 'hexagon))
 (define butterfly3 (makeButterfly 'yellow 'dots 'straight 'ellipse))
