@@ -102,7 +102,7 @@
       attr1
       attr2))
 
-;(compareAttributes 'yellow 'green)
+(compareAttributes 'yellow 'green)
 
 ;1.2.3
 ;creates a butterfly with dominant attributes and random recessive attributes
@@ -127,4 +127,17 @@
 ;(define (getInvisAttributes butterfly)
 ;TODO einfach jedes zweite element von (makeButterfly ...) ausgeben. Start bei 1
 
-;(show-butterfly 'green 'dots 'curved 'rhomb)
+;1.2.3
+(define butterfly1 (makeButterfly 'red 'dots 'curved 'rhomb))
+(define butterfly2 (makeButterfly 'blue 'star 'curly 'hexagon))
+(define butterfly3 (makeButterfly 'yellow 'dots 'straight 'ellipse))
+
+(define (display-butterfly butterfly)
+  (let ([color   (car butterfly)]
+        [palp    (car (list-tail butterfly 2))]
+        [pattern (car (list-tail butterfly 4))]
+        [wings   (car (list-tail butterfly 6))])
+        (show-butterfly color palp pattern wings)))
+
+;displays the butterfly on the screen
+(display-butterfly butterfly3)
