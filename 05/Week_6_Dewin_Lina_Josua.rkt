@@ -85,7 +85,7 @@
 
 ;;1.2.1
 ;returns any other recessive attributes of a given attribute
-(define (getRecessiveAttributes attr)
+(define (getAnyOtherRecessiveAttributes attr)
   (cond [(= 0 (index-of (getAttrList attr) attr)) (cdr (getAttrList attr))]
         [(= 1 (index-of (getAttrList attr) attr)) (cddr (getAttrList attr))]
         [(= 2 (index-of (getAttrList attr) attr)) (cdddr (getAttrList attr))]))
@@ -110,25 +110,22 @@
 (define (getRandomAttribute attr)
 (list-ref (getAttrList attr) (random (length (getAttrList attr)))))
 
-
-
-
 ;1.2.4
 ;returns all visible attributes of a butterfly. All visible elements have an even index in the list
-(define (getVisibleAttributes butterfly)
-  (let ([color   (car (list-tail butterfly 0))]
-        [palp    (car (list-tail butterfly 2))]
-        [pattern (car (list-tail butterfly 4))]
-        [wings   (car (list-tail butterfly 6))])
-        (list color palp pattern wings)))
+(define (getDominantAttr butterfly)
+  (flatten (getAttributes butterfly)))
 
 ;returns all invisible attributes of a butterfly All invisible elements have an odd index in the list
-(define (getInvisibleAttributes butterfly)
-   (let ([color   (car (list-tail butterfly 1))]
-         [palp    (car (list-tail butterfly 3))]
-         [pattern (car (list-tail butterfly 5))]
-         [wings   (car (list-tail butterfly 7))])
-         (list color palp pattern wings)))
+(define (getResessiveAttr butterfly)
+  (flatten (getAttributes (cdr butterfly))))
+
+;recursive step to get all dominant or all resessive attributes
+(define (getAttributes butterfly)
+  (if (empty? butterfly)
+      '()
+      (if (= 1 (length butterfly))
+          (car butterfly)
+          (cons (car butterfly) (getAttributes (cddr butterfly))))))
 
 ;1.2.5
 ;define some different butterflies for testing
@@ -138,25 +135,16 @@
 
 ;displays the butterfly on the screen
 (define (display-butterfly butterfly)
-  (let ([visAttr (getVisibleAttributes butterfly)])
+  (let ([visAttr (getDominantAttr butterfly)])
         (show-butterfly (car visAttr) (cadr visAttr) (caddr visAttr) (cadddr visAttr))))
-
 
 ;;sample outputs
 (getAttrList 'blue)
-(getRecessiveAttributes 'blue)
+(getAnyOtherRecessiveAttributes 'blue)
 (getMoreDominantAttribute 'yellow 'green)
-(getVisibleAttributes butterfly2)
-(getInvisibleAttributes butterfly2)
+(getDominantAttr butterfly2)
+(getResessiveAttr butterfly2)
 (display-butterfly butterfly2)
 
-
-(define (getXAttributes butterfly)
-  (if (empty? butterfly)
-      '()
-      (getXAttributes(cdr (list (list-ref butterfly 0)))))
-
-(getXAttributes butterfly2)
-;(list-ref butterfly2 0)
 ;1.2.6
 ;TODO
