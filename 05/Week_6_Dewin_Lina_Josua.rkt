@@ -110,6 +110,9 @@
 (define (getRandomAttribute attr)
 (list-ref (getAttrList attr) (random (length (getAttrList attr)))))
 
+
+
+
 ;1.2.4
 ;returns all visible attributes of a butterfly. All visible elements have an even index in the list
 (define (getVisibleAttributes butterfly)
@@ -147,5 +150,13 @@
 (getInvisibleAttributes butterfly2)
 (display-butterfly butterfly2)
 
+
+(define (getXAttributes butterfly)
+  (if (empty? butterfly)
+      '()
+      (getXAttributes(cdr (list (list-ref butterfly 0)))))
+
+(getXAttributes butterfly2)
+;(list-ref butterfly2 0)
 ;1.2.6
 ;TODO
