@@ -76,7 +76,7 @@
 
 ;1.1.2
 ;this function search for a substring in a given string and returns its list
-(define (getAttrList attr)
+(define (getSpecificAttrList attr)
   (cond [(string-contains? "bluegreenyellowred"  (symbol->string attr)) (car attributes)]
         [(string-contains? "curvedcurlystraight" (symbol->string attr)) (car (cdr attributes))]
         [(string-contains? "stardotsstripes"     (symbol->string attr)) (car (cddr attributes))]
@@ -86,37 +86,37 @@
 ;;1.2.1
 ;returns any other recessive attributes of a given attribute
 (define (getAnyOtherRecessiveAttributes attr)
-  (cond [(= 0 (index-of (getAttrList attr) attr)) (cdr (getAttrList attr))]
-        [(= 1 (index-of (getAttrList attr) attr)) (cddr (getAttrList attr))]
-        [(= 2 (index-of (getAttrList attr) attr)) (cdddr (getAttrList attr))]))
+  (cond [(= 0 (index-of (getSpecificAttrList attr) attr)) (cdr (getSpecificAttrList attr))]
+        [(= 1 (index-of (getSpecificAttrList attr) attr)) (cddr (getSpecificAttrList attr))]
+        [(= 2 (index-of (getSpecificAttrList attr) attr)) (cdddr (getSpecificAttrList attr))]))
 
 ;;1.2.2
 ;compares two attributes in terms of dominance
 (define (getMoreDominantAttribute attr1 attr2)
-  (if (< (index-of (getAttrList attr1)  attr1)
-         (index-of (getAttrList attr2)  attr2))
+  (if (< (index-of (getSpecificAttrList attr1)  attr1)
+         (index-of (getSpecificAttrList attr2)  attr2))
       attr1
       attr2))
 
 ;1.2.3
 ;creates a butterfly with dominant attributes and random recessive attributes
 (define (makeButterfly visibleColor visiblePalp visiblePattern visibleWings)
-  (list visibleColor   (getRandomAttribute visibleColor)
-        visiblePalp    (getRandomAttribute visiblePalp)
-        visiblePattern (getRandomAttribute visiblePattern)
-        visibleWings   (getRandomAttribute visibleWings)))
+  (list visibleColor   (generateRandomAttribute visibleColor)
+        visiblePalp    (generateRandomAttribute visiblePalp)
+        visiblePattern (generateRandomAttribute visiblePattern)
+        visibleWings   (generateRandomAttribute visibleWings)))
 
 ;returns a random attribute of an attribute list
-(define (getRandomAttribute attr)
-(list-ref (getAttrList attr) (random (length (getAttrList attr)))))
+(define (generateRandomAttribute attr)
+(list-ref (getSpecificAttrList attr) (random (length (getSpecificAttrList attr)))))
 
 ;1.2.4
-;returns all visible attributes of a butterfly. All visible elements have an even index in the list
+;returns all visible attributes of a butterfly.
 (define (getDominantAttr butterfly)
   (flatten (getAttributes butterfly)))
 
-;returns all invisible attributes of a butterfly All invisible elements have an odd index in the list
-(define (getResessiveAttr butterfly)
+;returns all invisible attributes of a butterfly.
+(define (getRecessiveAttr butterfly)
   (flatten (getAttributes (cdr butterfly))))
 
 ;recursive step to get all dominant or all resessive attributes
@@ -138,13 +138,49 @@
   (let ([visAttr (getDominantAttr butterfly)])
         (show-butterfly (car visAttr) (cadr visAttr) (caddr visAttr) (cadddr visAttr))))
 
+;1.2.6
+;returns random one of the first two elements from a butterfly
+(define (getRandomAttribute butterfly)
+  (chooseRandomAttribute (take butterfly 2)))
+
+;returns random one of the first two elements in a list
+(define (chooseRandomAttribute list)
+  (let ([rnd (random 2)])
+    (if (= 0 rnd)
+        (car list)
+        (cadr list))))
+
+;returns a child butterfly with all butterfly attributes. Recessive attributes are completely random generated
+(define (getChildOf motherButterfly fatherButterfly)
+  (let ([child (flatten (pairButterflies motherButterfly fatherButterfly))])
+  (makeButterfly (car child) (cadr child) (caddr child) (cadddr child))))
+
+;helper function to generate a random attribute for each specification e.g.
+;the child color is a random color of mother and fathers dominant / recessive color.
+(define (pairButterflies motherButterfly fatherButterfly)
+  (if (empty? motherButterfly)
+      '()
+      (list (getMoreDominantAttribute (getRandomAttribute motherButterfly) (getRandomAttribute fatherButterfly))
+            (pairButterflies (cddr motherButterfly) (cddr fatherButterfly)))))
+
+;(display-butterfly (getChildOf butterfly1 butterfly2))
+
+;returns a list of lists. Each nested list represents a child butterfly
+(define (getChildren motherButterfly fatherButterfly numberOfChildren)
+  (for/list ((i numberOfChildren))
+    (getChildOf butterfly1 butterfly2)))
+
+;displays all butterfly childrens from a list to the screen
+(define (display-all-childrens childrenList)
+  (display (for/list ((i (length childrenList)))
+    (display-butterfly (list-ref childrenList i)))))
+             
 ;;sample outputs
-(getAttrList 'blue)
+(getSpecificAttrList 'blue)
 (getAnyOtherRecessiveAttributes 'blue)
 (getMoreDominantAttribute 'yellow 'green)
 (getDominantAttr butterfly2)
-(getResessiveAttr butterfly2)
+(getRecessiveAttr butterfly2)
 (display-butterfly butterfly2)
-
-;1.2.6
-;TODO
+(getChildren butterfly1 butterfly2 10)
+(display-all-childrens (getChildren butterfly1 butterfly3 10))
