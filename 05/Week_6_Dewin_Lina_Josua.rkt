@@ -12,61 +12,6 @@
 
 ;;;1
 
-;; we chose a list with every attribute of the butterfly
-
-(define (butterfly color1 color2
-                   palp1 palp2
-                   pattern1 pattern2
-                   wings1 wings2)
-  (list  color1 color2
-         palp1 palp2
-         pattern1 pattern2
-         wings1 wings2))
-
-;;1.1.1
-;this function returns the dominant color of the the given butterfly
-(define (getDominantColor butterfly)
-  (cond [(member "blue" butterfly) "blue "]
-        [(member "green" butterfly) "green "]
-        [(member "yellow" butterfly) "yellow "]
-        [else "red "]))
-
-;;1.1.1
-;this function returns the dominant Fuehler of the the given butterfly
-(define (getDominantPalp butterfly)
-  (cond [(member "curved" butterfly) "curved "]    ;gekruemmt
-        [(member "curly" butterfly) "curly "]      ;geschweift 
-        [else "straight "]))                       ;gerade 
-
-;;1.1.1
-;this function returns the dominant Muster of the the given butterfly
-(define (getDominantPattern butterfly)
-  (cond [(member "star" butterfly) "star "]        ;Sterne
-        [(member "dots" butterfly) "dots "]        ;Punkte
-        [else "stripes "]))                        ;Streifen
-
-;;1.1.1
-;this function returns the dominant Fluegel of the the given butterfly
-(define (getDominantWings butterfly)
-  (cond [(member "ellipse" butterfly) "ellipse"]
-        [(member "rhomb" butterfly) "rhomb"]
-        [else "hexagon"]))
-
-;;1.1.2
-;this function returns the dominant attributes of the given butterfly
-(define (getDominantAttributes butterfly)
-  (string-append (getDominantColor butterfly)     ;Farbe
-                 (getDominantPalp butterfly)      ;Fuehler
-                 (getDominantPattern butterfly)   ;Muster
-                 (getDominantWings butterfly)))   ;Fluegel
-
-;exmaple use of getDominantAttributes  with a butterfly
-;(getDominantAttributes (butterfly "blue" "red" "gerade" "gekruemmt" "streifen" "punkte" "elliptisch" "hexagonal"))
-
-#|------------------------------------------------------------------------------------------------------------------|#
-
-;;;Alternative approach
-
 ;1.1.1
 ;this datastructure stores all related attributes as lists in a list
 (define attributes (list (list 'blue 'green 'yellow 'red)
@@ -128,11 +73,6 @@
           (cons (car butterfly) (getAttributes (cddr butterfly))))))
 
 ;1.2.5
-;define some different butterflies for testing
-(define butterfly1 (makeButterfly 'red 'dots 'curved 'rhomb))
-(define butterfly2 (makeButterfly 'blue 'star 'curly 'hexagon))
-(define butterfly3 (makeButterfly 'yellow 'dots 'straight 'ellipse))
-
 ;displays the butterfly on the screen
 (define (display-butterfly butterfly)
   (let ([visAttr (getDominantAttr butterfly)])
@@ -175,6 +115,57 @@
   (display (for/list ((i (length childrenList)))
     (display-butterfly (list-ref childrenList i)))))
              
+;;2 fathertest
+; we cant know that the child isnt from the parents only using the looks of each of them as the child
+; could have gotten the rezessive genes from the parents wich arent visible
+(define (fathertest fatherButterfly motherButterfly childButterfly)
+                             "the child could have inherited its attributes from the parents")
+;if we can see the rezessive genes as well this should work
+(define (betterfathertest fatherButterfly motherButterfly childButterfly)
+  (if  (and (testInheritColor fatherButterfly motherButterfly childButterfly)
+         (testInheritWings fatherButterfly motherButterfly childButterfly)
+         (testInheritFeeler fatherButterfly motherButterfly childButterfly)
+         (testInheritPattern fatherButterfly motherButterfly childButterfly))
+      "inheritance is possible"
+      "inheritance is impossible"))
+
+;test wheter the childs color could be inherited
+(define (testInheritColor fatherButterfly motherButterfly childButterfly)
+  (cond [( eq? (getMoreDominantAttribute (first fatherButterfly) (first motherButterfly)) (first childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (second fatherButterfly) (first motherButterfly)) (first childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (first fatherButterfly) (second motherButterfly)) (first childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (second fatherButterfly) (second motherButterfly)) (first childButterfly)) true]
+        [else false]))
+
+;test wheter the childs Pattern could be inherited
+(define (testInheritPattern fatherButterfly motherButterfly childButterfly)
+  (cond [( eq? (getMoreDominantAttribute (third fatherButterfly) (third motherButterfly)) (third childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (fourth fatherButterfly) (third motherButterfly)) (third childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (third fatherButterfly) (fourth motherButterfly)) (third childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (fourth fatherButterfly) (fourth motherButterfly)) (third childButterfly)) true]
+        [else false]))
+
+;test wheter the childs Feeler could be inherited
+(define (testInheritFeeler fatherButterfly motherButterfly childButterfly)
+  (cond [( eq? (getMoreDominantAttribute (fifth fatherButterfly) (fifth motherButterfly)) (fifth childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (sixth fatherButterfly) (fifth motherButterfly)) (fifth childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (fifth fatherButterfly) (sixth motherButterfly)) (fifth childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (sixth fatherButterfly) (sixth motherButterfly)) (fifth childButterfly)) true]
+        [else false]))
+
+;test wheter the childs Wings could be inherited
+(define (testInheritWings fatherButterfly motherButterfly childButterfly)
+  (cond [( eq? (getMoreDominantAttribute (seventh fatherButterfly) (seventh motherButterfly)) (seventh childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (eighth fatherButterfly) (seventh motherButterfly)) (seventh childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (seventh fatherButterfly) (eighth motherButterfly)) (seventh childButterfly)) true]
+        [( eq? (getMoreDominantAttribute (eighth fatherButterfly) (eighth motherButterfly)) (seventh childButterfly)) true]
+        [else false]))
+
+;define some different butterflies for testing
+(define butterfly1 (makeButterfly 'red 'dots 'curved 'rhomb))
+(define butterfly2 (makeButterfly 'blue 'star 'curly 'hexagon))
+(define butterfly3 (makeButterfly 'yellow 'dots 'straight 'ellipse))
+
 ;;sample outputs
 (getSpecificAttrList 'blue)
 (getAnyOtherRecessiveAttributes 'blue)
@@ -182,5 +173,21 @@
 (getDominantAttr butterfly2)
 (getRecessiveAttr butterfly2)
 (display-butterfly butterfly2)
+(display-butterfly butterfly3)
+(display-butterfly butterfly1)
 (getChildren butterfly1 butterfly2 10)
-(display-all-childrens (getChildren butterfly1 butterfly3 10))
+(display-all-childrens (getChildren butterfly1 butterfly2 10))
+
+;;fathertest sample outputs
+(define Mariposa (makeButterfly 'red 'stripes  'curved 'hexagon)) 
+(define Papillon (makeButterfly 'yellow 'star 'curly 'rhomb))
+(define Papallona (makeButterfly 'blue 'star 'curved 'hexagon))
+(define Farfalla (makeButterfly 'green 'dots 'straight 'rhomb))
+(define Alibangbang (makeButterfly 'yellow 'stripe 'curved 'ellipse))
+(testInheritColor Mariposa Papillon Papallona)
+(testInheritPattern Mariposa Papillon Papallona)
+(testInheritFeeler Mariposa Papillon Papallona)
+(testInheritWings Mariposa Papillon Papallona)
+(betterfathertest Mariposa Papillon Papallona)
+(betterfathertest Mariposa Papillon Farfalla)
+(betterfathertest Mariposa Papillon Alibangbang)
