@@ -1,5 +1,7 @@
 #lang racket
 
+(require 2htdp/image)
+
 ;Solution of exercise sheet 6,
 
 ;author:
@@ -7,6 +9,7 @@
 ;Dewin Bagci, 6815336
 ;Josua Spisak, 6944594
 ;Lina Kaine, 6499396
+
 
 ;;;1
 
@@ -68,3 +71,16 @@ agruments. Additionaly in merge-sort the return value is also a function.
 (takeE 3 '(a b c d)) ; -> '(a b c)
 
 ;;1.4
+(define baum1 (above/align
+                 "center"
+                 ;; der Stern an der Spitze
+                 (star-polygon 40 5 2 "solid" "gold")
+                 ;; die Zweige
+                 (ellipse 20 40 "solid" "darkgreen")
+                 (ellipse 80 50 "solid" "darkolivegreen")
+                 (ellipse 130 60 "solid" "olivedrab")
+                 (ellipse 180 80 "solid" "darkgreen")
+                 ;; der Stamm
+                 (rectangle 40 60 "solid" "brown") ))
+
+baum1
