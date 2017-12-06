@@ -34,10 +34,10 @@
   (empty-scene 1000 1000 "black"))
 ;a text
 (define text1
-  (text "Marry Christmas" 40 "red"))
+  (text "Merry Christmas" 40 "red"))
 ;another text
 (define text2
-  (text "Marry Christmas" 40 "gold"))
+  (text "Merry Christmas" 40 "gold"))
 ;a sled
 (define (sled r)
   (if r 
