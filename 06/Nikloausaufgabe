@@ -154,6 +154,6 @@
   (place-snowflakes (snoflake-number universe-year) universe-year scene (choose-snoflake-plane universe-year))))))
 
 ;so we can see what happens
-(animate (christmas-sim 0.1))
+(animate (christmas-sim 0.5))
 
       
