@@ -3,7 +3,7 @@
 (require picturing-programs)
 
 ;our Simulation
-(define (christmas-sim tick)
+(define (christmas-sim tick) ;tick decides the speed speed is higher if tick is smaller
   (big-bang
       (make-christmas-universe 1)
     (on-tick next-frame tick)
@@ -39,23 +39,20 @@
 (define text2
   (text "Merry Christmas" 40 "gold"))
 ;a sled
-(define (sled r)
-  (if r 
-  (overlay/xy 
-                 (add-line (rectangle 200 50 "solid" "red") 0 51 200 51 "brown")
-                 -50 -50 
-                 (circle 50 "outline" "brown"))
-  (overlay/xy 
-                 (add-line (rectangle 200 50 "solid" "red") 0 51 200 51 "brown")
-                 150 -50 
-                 (circle 50 "outline" "brown"))))
-  250 51 0
+(define (sled r) ;can be reversed
+  (overlay/xy
+                 (overlay/align
+                  "center" "bottom"
+                 (rectangle 200 10 "solid" "silver")
+                 (rectangle 200 50 "solid" "red"))
+                 (if r -50 150) -50
+                 (circle 50 "outline" (pen "silver" 10 "solid" "round" "round"))))
 ;a present
 (define present
   (above
    (beside
-    (ellipse  30 20 "outline" "gold")
-    (ellipse  30 20 "outline" "gold"))
+    (ellipse  30 20 "outline" (pen "gold" 5 "solid" "round" "round"))
+    (ellipse  30 20 "outline" (pen "gold" 5 "solid" "round" "round")))
    (rectangle 80 80 "solid" "red")))
 ;our scene
 (define scene
@@ -69,13 +66,13 @@
         [else
          (place-snowflakes (- number 1) universe-year (plane (place-image snowflake
                                                            (random 10 (- 1000 10)) ;width in wich it can be placed
-                                                           (random 10 (+ 10 (* universe-year 10))) ;height in wich it can be placed
+                                                           (random 10 (+ 10 (* universe-year 20))) ;height in wich it can be placed
                                                            canvas) text1 )plane)])) ;we basicly decide wheteher the text is gold or red by look if the year is odd or even
 ;uses the year to decide how many snoflakes we want
 (define (snoflake-number universe-year)
   (if (< universe-year 100)
       (* universe-year 3)
-      300))
+      500))
 ;a tree
 (define (christmasTree size)
   (above/align
@@ -106,7 +103,7 @@
   (+ 1 (floor (/ universe-year 10))))
 ;draws snow at the floor
 (define (snow-floor universe-year)
-  (cond ([> universe-year 100] (rectangle 1000  (- (/ universe-year 2) 30) "solid" "white"))
+  (cond ([> universe-year 50] (rectangle 1000  (- (/ universe-year 2) 20) "solid" "white"))
         [else (rectangle 0 0 "solid" "black")]));we only have a snowfloor once a certain time is passedso we have an image of nothing till then this could also be solved by making the cond in draw-christmas but i wanted to keep that clas as small as possilbe
 ;chooses if the text is gold or red
 (define (choose-snoflake-plane universe-year)
@@ -140,6 +137,7 @@
       900
       (- 1500 (* 10 universe-year))))
 ;the real drawing begines here
+;we place images in images until we got every part of the picture
 (define (draw-christmas picture universe-year)
   (place-image
    (sled (if (< universe-year 60)
@@ -156,5 +154,6 @@
   (place-snowflakes (snoflake-number universe-year) universe-year scene (choose-snoflake-plane universe-year))))))
 
 ;so we can see what happens
-(animate (christmas-sim 1))
+(animate (christmas-sim 0.1))
+
       
