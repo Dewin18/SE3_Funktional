@@ -1,4 +1,7 @@
-#lang racket/gui
+#lang racket
+
+(require 2htdp/image)
+(require racket/trace)
 
 ;Solution of exercise sheet 6,
 
@@ -8,10 +11,12 @@
 ;Josua Spisak, 6944594
 ;Lina Kaine, 6499396
 
+
 ;;;1
 
 ;;1.1
-#|The functions take, drop and merge are linear because we have basic termination condition. we start with one
+#|
+The functions take, drop and merge are linear because we have basic termination condition. we start with one
 element and continue with its successor.
 The basic termination for the functions take and drop is if xs is null and then we have the empty
 list and in merge we have two of them because merge is also a tree recursion so  we
@@ -31,27 +36,42 @@ none of the other functions is nested as they only call themselves
 all of the functions are direct because they dont mutually call each other
 therefore none of them are indirect
 we also dont have end-recursion.
-|#
+
 ;;1.2
-#|
- merge as well as merge-sort are functions of higher order because both of them take a function (rel<?)
-as an input
+
+merge and merge-sort are both higher order functions.
+In merge we have a boolean condition as signature ( merge rel<?...).
+In merge-sort we call the functions part1 and part2 with other functions (take / drop) as
+agruments. Additionaly in merge-sort the return value is also a function.
 |#
+
 ;;1.3
-;this function is to hide the accumulator
-(define (take-sum n xs)
-  (take n xs '()))
-;this function is the new take with end recursion
-(define (take n xs acc)
-  (cond
-    [(null? xs ) acc] ;instead of the empty list we have acc as output acc is basicly the new list wich we want to take from the old list
-    [(= 0 n) acc]
-    [else (take (- n 1) (cdr xs) (cons (car xs) acc  ))])) ;we basicly add the first element of the list xs to acc and continue the recursion with xs minus the first element and n minus one because we already took one element
-(require racket/trace);so we can use trace
-(trace take-sum)
+
+;naive-recursive
+(define (take n xs)
+   (cond
+      ((null? xs) '())
+      ((= 0 n) '())
+      (else (cons (car xs)
+                  (take (- n 1) (cdr xs))))))
+
+;sample output
 (trace take)
-(take-sum 5 (list 0 1 2 3 4 5 6 7 8 9)) ;exmaplary use of take-sum we trace both take and take-sum to see the end recursion
 
-;;2
-(require picturing-programs)
 
+(take 3 '(a b c d)) ; -> '(a b c)
+
+;tail-recursive
+(define (take-acc n xs acc)
+  (cond [(or (null? xs) (= 0 n)) acc]
+        (else (take-acc (- n 1)
+                        (cdr xs)
+                        (cons acc (car xs))))))
+
+(define (takeE n xs)
+  (flatten (take-acc n xs '())))
+
+(trace take-acc)
+
+;sample output
+(takeE 3 '(a b c d)) ; -> '(a b c)

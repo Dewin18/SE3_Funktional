@@ -1,6 +1,16 @@
 #lang racket
-;we need a package
+
 (require picturing-programs)
+
+;Solution of exercise sheet 6,
+
+;author:
+
+;Dewin Bagci, 6815336
+;Josua Spisak, 6944594
+;Lina Kaine, 6499396
+
+;;;2 Nikolausaufgabe
 
 ;our Simulation
 (define (christmas-sim tick)
