@@ -19,6 +19,10 @@
           (+  1 (count-naive-recursive number (cdr list) counter))
           (count-naive-recursive number (cdr list) counter))))
 
+;tail-recursive function
+(define (count-tail-recursive number list)
+  (count-acc number list 0))
+
 ;accumulator for tail-recursive part
 (define (count-acc number numberList counter)
   (if (= 0 (length numberList))
@@ -26,10 +30,6 @@
       (if (= number (car numberList))
           (count-acc number (cdr numberList) (+ counter 1))
           (count-acc number (cdr numberList) counter))))
-
-;tail-recursive function
-(define (count-tail-recursive number list)
-  (count-acc number list 0))
 
 ;higher order function
 (define (count-high number list function)
