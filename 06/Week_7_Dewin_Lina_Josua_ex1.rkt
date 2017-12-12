@@ -55,10 +55,10 @@ agruments. Additionaly in merge-sort the return value is also a function.
       (else (cons (car xs)
                   (take (- n 1) (cdr xs))))))
 
-;sample output
+
 (trace take)
 
-
+;sample output
 (take 3 '(a b c d)) ; -> '(a b c)
 
 ;tail-recursive
