@@ -1,6 +1,6 @@
 #lang racket
 ;;;2 Game Of Life
-(define N 5)
+(define N 7)
 ;;2.1
 ;this function gives us a list of list with basicly the cordinates of the Game so we have 1-30 places in row 1 1-30 places in row 2 and so on we give out the row number and then the seats
 ;using this function gives us the advantage that we can find the neighbours wich will be important for the game and we can set N however we want
@@ -143,11 +143,11 @@
         [(= 0 X) 
          (oneEdge X Y + oldGameState)]
         [(= 0 Y)
-         (oneEdge Y X + oldGameState)]
+         (oneEdgeY X Y + oldGameState)]
         [ (= N X) 
          (oneEdge X Y - oldGameState)]
         [ (= N Y) 
-         (oneEdge Y X - oldGameState)]
+         (oneEdgeY X Y - oldGameState)]
         [else (analyseNeighbours X Y oldGameState)]))
 ;this function deals with the cases of the analyseNeighboursWithEdges in wich we have cells with 5 neighbours 
 (define (oneEdge Edge NotEdge op oldGameState)
@@ -157,17 +157,33 @@
           (analyseNeighbour (op Edge 1) NotEdge oldGameState)
           (analyseNeighbour (op Edge 1) (- NotEdge 1)oldGameState)
           (analyseNeighbour Edge (- NotEdge 1)oldGameState)))
+(define (oneEdgeY NotEdge Edge op oldGameState)
+         (list
+          (analyseNeighbour  (+ NotEdge 1)(op Edge 1) oldGameState)
+          (analyseNeighbour  (+ NotEdge 1) Edge oldGameState)
+          (analyseNeighbour  NotEdge (op Edge 1) oldGameState)
+          (analyseNeighbour (- NotEdge 1)(op Edge 1)  oldGameState)
+          (analyseNeighbour  (- NotEdge 1)Edge oldGameState)))
 ;;2.4
 (require 2htdp/universe)
 ;a start for the animation
 (define gamestart
   (gameStart 0 N))
+(define gamestartFigur1
+'(((0) 0 "a" 1 "a" 2 "d" 3 "d" 4 "d" 5 "d" 6 "a" 7 "a")
+  ((1) 0 "a" 1 "d" 2 "a" 3 "d" 4 "d" 5 "a" 6 "d" 7 "a")
+  ((2) 0 "d" 1 "d" 2 "a" 3 "d" 4 "d" 5 "a" 6 "d" 7 "d")
+  ((3) 0 "d" 1 "d" 2 "a" 3 "d" 4 "d" 5 "a" 6 "d" 7 "d")
+  ((4) 0 "d" 1 "d" 2 "d" 3 "a" 4 "a" 5 "d" 6 "d" 7 "d")
+  ((5) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d")
+  ((6) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d")
+  ((7) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d")))
 ;the function that does the animation
-(define (gameOfLife-sim tick)
+(define (gameOfLife-sim tick Start)
   (big-bang
-   (make-gameOfLife-universe gamestart)
+   (make-gameOfLife-universe Start)
    (on-tick next-frame tick)
-   (to-draw show-gameOfLife-world (+ 10 (* N 10)) (+ 10 (* N 10)))
+   (to-draw show-gameOfLife-world (+ 20 (* N 10)) (+ 20 (* N 10)))
    (name "Game of Life2")))
 ;our universe it takes a state as input
 (define-struct gameOfLife-universe (state))
@@ -192,4 +208,4 @@
   (let ([Row (cdr (assoc (cons X '()) oldGameState))])
     (getXElementFromList (+ 1 (* 2 Y)) Row)))
 ;the call for the animation (the calculation is reaaaaaaaaaaaaaaaaaaally slow so it takes a while for each picture to show          
-(animate( gameOfLife-sim 1))
+(animate( gameOfLife-sim 1 gamestartFigur1))
