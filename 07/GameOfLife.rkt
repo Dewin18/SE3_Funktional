@@ -251,7 +251,7 @@
           (analyseNeighbour (- X N) (- Y 1))
           (analyseNeighbour (- X N) (- Y N))
           (analyseNeighbour X  (- Y N))
-          (analyseNeighbour (- X 1) (- Y N))]
+          (analyseNeighbour (- X 1) (- Y N)))]
         [(and (= N Y) (= 0 X))
          (list
           (analyseNeighbour (+ X 1) (- Y 1)oldGameState)
