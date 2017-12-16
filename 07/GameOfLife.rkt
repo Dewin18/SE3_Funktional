@@ -1,6 +1,6 @@
 #lang racket
 ;;;2 Game Of Life
-(define N 7)
+(define N 30)
 ;;2.1
 ;this function gives us a list of list with basicly the cordinates of the Game so we have 1-30 places in row 1 1-30 places in row 2 and so on we give out the row number and then the seats
 ;using this function gives us the advantage that we can find the neighbours wich will be important for the game and we can set N however we want
@@ -169,6 +169,7 @@
 ;a start for the animation
 (define gamestart
   (gameStart 0 N))
+;N needs to be 7 for this
 (define gamestartFigur1
 '(((0) 0 "a" 1 "a" 2 "d" 3 "d" 4 "d" 5 "d" 6 "a" 7 "a")
   ((1) 0 "a" 1 "d" 2 "a" 3 "d" 4 "d" 5 "a" 6 "d" 7 "a")
@@ -178,8 +179,20 @@
   ((5) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d")
   ((6) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d")
   ((7) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d")))
+;N needs to be 9 for this
+(define gamestartFigur2
+'(((0) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d" 8 "d" 9 "d")
+  ((1) 0 "d" 1 "d" 2 "d" 3 "a" 4 "a" 5 "a" 6 "a" 7 "d" 8 "d" 9 "d")
+  ((2) 0 "d" 1 "d" 2 "d" 3 "a" 4 "d" 5 "d" 6 "a" 7 "d" 8 "d" 9 "d")
+  ((3) 0 "d" 1 "a" 2 "a" 3 "a" 4 "d" 5 "d" 6 "a" 7 "a" 8 "a" 9 "d")
+  ((4) 0 "d" 1 "a" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d" 8 "a" 9 "d")
+  ((5) 0 "d" 1 "a" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d" 8 "a" 9 "d")
+  ((6) 0 "d" 1 "a" 2 "a" 3 "a" 4 "d" 5 "d" 6 "a" 7 "a" 8 "a" 9 "d")
+  ((7) 0 "d" 1 "d" 2 "d" 3 "a" 4 "d" 5 "d" 6 "a" 7 "d" 8 "d" 9 "d")
+  ((8) 0 "d" 1 "d" 2 "d" 3 "a" 4 "a" 5 "a" 6 "a" 7 "d" 8 "d" 9 "d")
+  ((9) 0 "d" 1 "d" 2 "d" 3 "d" 4 "d" 5 "d" 6 "d" 7 "d" 8 "d" 9 "d")))
 ;the function that does the animation
-(define (gameOfLife-sim tick Start)
+(define (gameOfLife-sim tick Start )
   (big-bang
    (make-gameOfLife-universe Start)
    (on-tick next-frame tick)
@@ -207,5 +220,102 @@
 (define (analyseNeighbour X Y oldGameState)
   (let ([Row (cdr (assoc (cons X '()) oldGameState))])
     (getXElementFromList (+ 1 (* 2 Y)) Row)))
-;the call for the animation (the calculation is reaaaaaaaaaaaaaaaaaaally slow so it takes a while for each picture to show          
-(animate( gameOfLife-sim 1 gamestartFigur1))
+;the call for the animation        
+(animate(gameOfLife-sim 1 gamestart))
+;a specific start
+;(set! N 7)
+;(animate(gameOfLife-sim 1 gamestartFigur1))
+;another specific start
+;(set! N 9)
+;(animate(gameOfLife-sim 1 gamestartFigur2))
+
+
+;;2.5
+(define (analyseNeighboursWithoutEdge X Y oldGameState)
+  (cond [(= 0 X Y) 
+         (list
+          (analyseNeighbour (+ X 1) (+ Y 1)oldGameState)
+          (analyseNeighbour X (+ Y 1)oldGameState)
+          (analyseNeighbour (+ X 1) Y oldGameState)
+          (analyseNeighbour (+ X N) Y)
+          (analyseNeighbour (+ X N) (+ Y 1))
+          (analyseNeighbour X (+ Y N) )
+          (analyseNeighbour (+ X 1) (+ Y N) )
+          (analyseNeighbour (+ X N) (+ Y N)))]
+        [(= N X Y)
+         (list
+          (analyseNeighbour (- X 1) (- Y 1) oldGameState)
+          (analyseNeighbour X (- Y 1) oldGameState)
+          (analyseNeighbour (- X 1) Y oldGameState)
+          (analyseNeighbour (- X N) Y)
+          (analyseNeighbour (- X N) (- Y 1))
+          (analyseNeighbour (- X N) (- Y N))
+          (analyseNeighbour X  (- Y N))
+          (analyseNeighbour (- X 1) (- Y N))]
+        [(and (= N Y) (= 0 X))
+         (list
+          (analyseNeighbour (+ X 1) (- Y 1)oldGameState)
+          (analyseNeighbour X (- Y 1)oldGameState)
+          (analyseNeighbour (+ X 1) Y oldGameState)
+          (analyseNeighbour X  (- Y N))
+          (analyseNeighbour (+ X N) Y)
+          (analyseNeighbour (+ X 1) (- Y N))
+          (analyseNeighbour (+ X N) (- Y 1))
+          (analyseNeighbour (+ X N) (- Y N)))]
+        [(and (= N X) (= 0 Y))
+         (list
+          (analyseNeighbour (- X 1) (- Y 1)oldGameState)
+          (analyseNeighbour X (+ Y 1)oldGameState)
+          (analyseNeighbour (- X 1) Y oldGameState)
+          (analyseNeighbour X  (+ Y N))
+          (analyseNeighbour (- X N) Y)
+          (analyseNeighbour (- X 1) (+ Y N))
+          (analyseNeighbour (- X N) (+ Y 1))
+          (analyseNeighbour (- X N) (+ Y N)))]
+        [(= 0 X) 
+         (oneEdgeW X Y + oldGameState)]
+        [(= 0 Y)
+         (oneEdgeWY X Y + oldGameState)]
+        [ (= N X) 
+         (oneEdgeW X Y - oldGameState)]
+        [ (= N Y) 
+         (oneEdgeWY X Y - oldGameState)]
+        [else (analyseNeighbours X Y oldGameState)]))
+;this function deals with the cases of the analyseNeighboursWithEdges in wich we have cells with 5 neighbours 
+(define (oneEdgeW Edge NotEdge op oldGameState)
+         (list
+          (analyseNeighbour (op Edge 1) (+ NotEdge 1) oldGameState)
+          (analyseNeighbour Edge (+ NotEdge 1)oldGameState)
+          (analyseNeighbour (op Edge 1) NotEdge oldGameState)
+          (analyseNeighbour (op Edge 1) (- NotEdge 1)oldGameState)
+          (analyseNeighbour Edge (- NotEdge 1)oldGameState)
+          (analyseNeighbour (op Edge N) NotEdge)
+          (analyseNeighbour (op Edge N) (- NotEdge 1 ))
+          (analyseNeighbour (op Edge N) (+ NotEdge 1))))
+(define (oneEdgeWY NotEdge Edge op oldGameState)
+         (list
+          (analyseNeighbour  (+ NotEdge 1)(op Edge 1) oldGameState)
+          (analyseNeighbour  (+ NotEdge 1) Edge oldGameState)
+          (analyseNeighbour  NotEdge (op Edge 1) oldGameState)
+          (analyseNeighbour (- NotEdge 1)(op Edge 1)  oldGameState)
+          (analyseNeighbour  (- NotEdge 1) Edge oldGameState)
+          (analyseNeighbour  NotEdge (op Edge N))
+          (analyseNeighbour (- NotEdge 1 )(op Edge N))
+          (analyseNeighbour  (+ NotEdge 1)(op Edge N))))
+
+;If we want to have the simulation running with the without edge things we unccomment this function and comment the first nextGameStatePlace function
+#|
+(define (nextGameStatePlace X Y Current oldGameState)
+  (let ([NeighbourStates (analyseNeighboursWithoutEdge X Y oldGameState)])
+  (cond [(= 3 (countLiving NeighbourStates 0))
+         "a"]
+         [(< 3 (countLiving NeighbourStates 0))
+         "d"]
+         [(> 2 (countLiving NeighbourStates 0))
+         "d"]
+         [else (cond
+                 [(eq? Current "a") "a"]
+                 [else "d"])
+          ])))
+
+|#
