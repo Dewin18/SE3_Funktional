@@ -1,7 +1,5 @@
 #lang racket
 
-(require racket/trace)
-
 ;Solution of exercise sheet 8,
 
 ;author:
