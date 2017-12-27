@@ -75,12 +75,20 @@ are bound to the lambda expression. Since we have only bound var. they are all r
 |#
 
 ;;1.4
+;This evaluates to 21 the 3 is basicly our starting point and then we use our procedure wich is
+;curry + 2 on each element from the list starting with the left one so 3 + (5 + 2) = 10 + (4 + 2) = 16 + (3 + 2) = 21
 (foldl (curry + 2) 3 '(3 4 5))
 
+;evaluates to (ungerade gerade ungerade...) we use our function on each element.
+;The value 4 is even so for some reason we call it ungerade wich means odd wich is odd
 (map gerade-oder-ungerade  '(4 587 74 69 969 97 459 4))
 
+;evaluates to all numbers in the list so 1 4 and -7
 (filter number?  '((a b) () 1 (()) 4 -7 "a"))
 
+#|This evaluates to -51.
+we start with filtering each element of the list wich is less then 0 so we get -45 and -6 then we fold this wich gets us -51.
+The compose is taking the procedure wich filters the elements and adds them and uses it on the given list|#
 ((compose(curry foldl + 0) (curry filter (curryr < 0 ))) '(5682 48 24915 -45 -6 48))
 
 ;;;2
@@ -125,3 +133,80 @@ are bound to the lambda expression. Since we have only bound var. they are all r
 (split-by-predicate string? '(a "b" 3 "c" f #f))
 
 ;;;3
+
+(require se3-bib/setkarten-module)
+(display "EXERCISE 3 SAMPLE OUTPUT \n")
+
+;;3.1
+(define (gamemap karte1 karte2 karte3 karte4 karte5 karte6 karte7 karte8 karte9 karte10 karte11 karte12)
+  (list karte1 karte2 karte3 karte4 karte5 karte6 karte7 karte8 karte9 karte10 karte11 karte12))
+
+;;3.2
+(define (karthProduct list1 list2 list3)
+  (if (empty? list1)
+      list3
+      (karthProduct (cdr list1) list2 (append  (map (curry list (car list1)) list2) list3 ))))
+
+(define generategamecards
+  (let ([colors (list 'red 'green 'blue)]
+        [modes (list 'outline 'solid 'hatched)]
+        [patterns (list 'waves 'oval 'rectangle)]
+        [numbers (list 1 2 3)])
+    (let ([set (karthProduct numbers (karthProduct patterns (karthProduct modes colors '()) '() ) '() )])
+      set)))
+
+(define (flattenlistoflists list)
+  (if (empty? list)
+      '()
+      (cons (flatten (car list)) (flattenlistoflists (cdr list)))))
+
+(define gamecards
+  (flattenlistoflists generategamecards))
+
+(define (showOneGamecard list)
+  (show-set-card (first list) (second list) (third list) (fourth list)))
+    
+(showOneGamecard (car gamecards))
+
+(define showAllGamecards
+  (map showOneGamecard gamecards))
+
+showAllGamecards
+
+;;3.3
+(define (is-a-set? card1 card2 card3)
+  (and
+       (compareAttribute first card1 card2 card3)
+       (compareAttribute second card1 card2 card3)
+       (compareAttribute third card1 card2 card3)
+       (compareAttribute fourth card1 card2 card3)))
+
+(define (compareAttribute f card1 card2 card3)
+       (or (and (eq? (f card1) (f card2))
+                (eq? (f card1) (f card3)))
+           (and (not (eq? (f card1) (f card2)))
+                (not (eq? (f card2) (f card3)))
+                (not (eq? (f card1) (f card3))))))
+
+(is-a-set? '(2 red oval hatched) '(2 red rectangle hatched) '(2 red wave hatched))
+(is-a-set? '(2 red rectangle outline) '(2 green rectangle outline) '(1 green rectangle solid))
+
+;;4
+#|
+(define (elementsfromlist n inlist outlist)
+  (if (= n 0)
+      (reverse outlist)
+      (elementsfromlist (- n 1) (cdr inlist) (cons (car inlist) outlist))))
+
+(define (findsetsfromfield list)
+  (findsetsfromfield (cons (is-a-set? (first list)(second list) (car(cdr(car(cdr(car list)))))) (cdr list))))
+
+(define findsets
+  (let
+      ([playfield  (elementsfromlist 12 (shuffle gamecards) '())])
+        (findsetsfromfield (karthProduct playfield (karthProduct playfield playfield '()) '()))))
+|#
+;;instead of first second and so on in findsetsfrom field i need  to car the list take the first 4 elements for first the next 4 for second and so on
+
+
+
