@@ -87,17 +87,27 @@ are bound to the lambda expression. Since we have only bound var. they are all r
 
 (display "EXERCISE 2 SAMPLE OUTPUT \n")
 
-;Basic higher order function for all list modifications in this exercise.
+;2.1 .Basic higher order function for all list modifications in this exercise.
 (define (modify-all f xs)
   (filter number? (map (curry f)  xs)))
 
-;Function for 2.2. Returns the number if the number modulo 11 or 9 is 0, #void otherwise.
+;Helper function for 2.2. Returns the number if the number modulo 11 or 9 is 0, #void otherwise.
 (define (mod-11-9 number)
   (cond [(or (= 0 (modulo number 11))
              (= 0 (modulo number 9))) number]))
 
+;Helper function for 2.3 Returns the number if the number is even and greater than 6, #void otherwise
+(define (odd-bigger-6 number)
+  (cond [(and (odd? number)
+              (< 6 number) number)]))
 
-;TODO
+;Function for 2.4. Split a list in two sublists for given predicate. The first sublist contains all elements that
+;fits the predicate and the second sublist all other elements.
+(define (split-by-predicate predicate list)
+  (let* ([filtered (filter predicate list)]
+         [unfiltered (remove* filtered list)])
+    (cons filtered
+          (cons unfiltered '()))))
 
 ;2.1
 (modify-all sqr '(1 2 3 4 5))
@@ -105,3 +115,13 @@ are bound to the lambda expression. Since we have only bound var. they are all r
 ;2.2
 (modify-all mod-11-9 '(11 9 1 12 22 1 18 23 27 88))
 
+;2.3
+(modify-all odd-bigger-6 '(1 2 4 5 6 7 8 9 10 11 12 13 43 44 55 71))
+
+;2.4
+(split-by-predicate even? '(1 2 3 4 5))
+(split-by-predicate number? '(a 2 b c 5))
+(split-by-predicate boolean? '(#t #t #f 4 5))
+(split-by-predicate string? '(a "b" 3 "c" f #f))
+
+;;;3
