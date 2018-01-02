@@ -136,15 +136,18 @@ The compose is taking the procedure wich filters the elements and adds them and 
 (display "EXERCISE 3 SAMPLE OUTPUT \n")
 
 ;;3.1
+;a list of 12 cards wich form the current game state
 (define (gamemap karte1 karte2 karte3 karte4 karte5 karte6 karte7 karte8 karte9 karte10 karte11 karte12)
   (list karte1 karte2 karte3 karte4 karte5 karte6 karte7 karte8 karte9 karte10 karte11 karte12))
 
 ;;3.2
+;a helper function to multiply two lists with each other
 (define (karthProduct list1 list2 list3)
   (if (empty? list1)
       list3
       (karthProduct (cdr list1) list2 (append  (map (curry list (car list1)) list2) list3 ))))
-
+      
+;generates all of the possible gamecards
 (define generategamecards
   (let ([colors (list 'red 'green 'blue)]
         [modes (list 'outline 'solid 'hatched)]
@@ -152,44 +155,52 @@ The compose is taking the procedure wich filters the elements and adds them and 
         [numbers (list 1 2 3)])
     (let ([set (karthProduct numbers (karthProduct patterns (karthProduct modes colors '()) '() ) '() )])
       set)))
-
+      
+;a helper function to format our gamecards
 (define (flattenlistoflists list)
   (if (empty? list)
       '()
       (cons (flatten (car list)) (flattenlistoflists (cdr list)))))
-
+      
+;the formated gamecards
 (define gamecards
   (flattenlistoflists generategamecards))
-
+  
+;visually represents a game card
 (define (showOneGamecard list)
   (show-set-card (first list) (second list) (third list) (fourth list)))
-    
+
+;examplery use of showOneGamecard
 (showOneGamecard (car gamecards))
 
+;visually represents all of the gamecards
 (define showAllGamecards
   (map showOneGamecard gamecards))
-
+  
+;examplery use of showAllGamecards
 showAllGamecards
 
 ;;3.3
+;checks wheter 3 cards are a set
 (define (is-a-set? card1 card2 card3)
   (and
        (compareAttribute first card1 card2 card3)
        (compareAttribute second card1 card2 card3)
        (compareAttribute third card1 card2 card3)
        (compareAttribute fourth card1 card2 card3)))
-
+;compares attributes of 3 cards
 (define (compareAttribute f card1 card2 card3)
        (or (and (eq? (f card1) (f card2))
                 (eq? (f card1) (f card3)))
            (and (not (eq? (f card1) (f card2)))
                 (not (eq? (f card2) (f card3)))
                 (not (eq? (f card1) (f card3))))))
-
+;examplery use of is-a-set?
 (is-a-set? '(2 red oval hatched) '(2 red rectangle hatched) '(2 red wave hatched))
 (is-a-set? '(2 red rectangle outline) '(2 green rectangle outline) '(1 green rectangle solid))
 
 ;;4
+;not finished
 #|
 (define (elementsfromlist n inlist outlist)
   (if (= n 0)
