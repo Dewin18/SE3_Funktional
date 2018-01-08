@@ -136,7 +136,7 @@ The compose is taking the procedure wich filters the elements and adds them and 
 (display "EXERCISE 3 SAMPLE OUTPUT \n")
 
 ;;3.1
-;a list of 12 cards wich form the current game state
+;a list of 12 cards which form the current game state
 (define (gamemap karte1 karte2 karte3 karte4 karte5 karte6 karte7 karte8 karte9 karte10 karte11 karte12)
   (list karte1 karte2 karte3 karte4 karte5 karte6 karte7 karte8 karte9 karte10 karte11 karte12))
 
