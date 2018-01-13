@@ -1,4 +1,5 @@
 #lang racket
+(require 2htdp/batch-io)
 ;;;2 Game Of Life
 (define N 30)
 ;;2.1
